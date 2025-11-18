@@ -1,36 +1,39 @@
-import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
-  CardDescription
 } from "@/components/ui/card";
 import {
   Field,
+  FieldDescription,
   FieldGroup,
-  FieldDescription
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { api } from "@/services/api";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+// import { useAuth } from "../hooks/useAuth"; 
 
-type LoginType = {
+type RegisterType = {
+  username: string;
+  full_name: string;
   email: string;
   password: string;
 };
 
-export function Login() {
-  const [form, setForm] = useState<LoginType>({
+export function Register() {
+  const [form, setForm] = useState<RegisterType>({
+    username: "",
+    full_name: "",
     email: "",
-    password: ""
+    password: "",
   });
 
   const navigate = useNavigate();
-  const { login } = useAuth();
+  // const { login } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.id]: e.target.value });
@@ -38,23 +41,17 @@ export function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     try {
-      const res = await api.post("api/v1/auth/login", form);
+     await api.post("api/v1/auth/register", form);
+ 
 
-      const token = res.data?.token;
-      if (!token) {
-        alert("Login gagal: token tidak tersedia");
-        return;
-      }
-
-      login(token);                   
-      navigate("/thread");            
-
-      alert("Login berhasil!");
+      alert("Register berhasil!");
+      navigate("/login");
 
     } catch (error) {
       console.error(error);
-      alert("Email atau password salah!");
+      alert("Register gagal!");
     }
   };
 
@@ -63,49 +60,67 @@ export function Login() {
       <Card className="w-sm">
         <CardHeader>
           <CardTitle className="text-2xl text-green-600">circle</CardTitle>
-          <CardTitle>Login to Circle</CardTitle>
-          <CardDescription>Welcome back!</CardDescription>
+          <CardTitle>Register to your account</CardTitle>
+          <CardDescription>Create account Circle</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit}>
             <FieldGroup>
+              <Field>
+                <Input
+                  id="username"
+                  type="text"
+                  value={form.username}
+                  placeholder="username"
+                  onChange={handleChange}
+                  required
+                />
+              </Field>
 
               <Field>
-                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="full_name"
+                  type="text"
+                  value={form.full_name}
+                  placeholder="Full Name"
+                  onChange={handleChange}
+                  required
+                />
+              </Field>
+
+              <Field>
                 <Input
                   id="email"
                   type="email"
                   value={form.email}
+                  placeholder="Email"
                   onChange={handleChange}
-                  placeholder="email"
                   required
                 />
               </Field>
 
               <Field>
-                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
                   value={form.password}
+                  placeholder="Password"
                   onChange={handleChange}
-                  placeholder="password"
                   required
                 />
               </Field>
 
               <Field>
-                <Button type="submit" className="bg-green-700 w-full">
-                  Login
+                <Button type="submit" className="bg-green-600 w-full">
+                  Create
                 </Button>
                 <FieldDescription className="text-start">
-                  Don't have an account yet?{" "}
-                  <a href="/register" className="text-green-500">
-                    Create account
+                  Already have account?{" "}
+                  <a href="/login" className="text-green-500">
+                    Login
                   </a>
                 </FieldDescription>
               </Field>
-
             </FieldGroup>
           </form>
         </CardContent>

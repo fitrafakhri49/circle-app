@@ -12,7 +12,17 @@ export async function registerUser(username: string, full_name: string, email:st
     data: { username,full_name,email, password: hashed },
   });
 
-  return { id: user.id,username:user.username,full_name:user.full_name ,email: user.email , };
+  const userCreate= await prisma.users.update({
+    where: { id: user.id },
+    data: { created_by: user.id }
+  });
+
+  const userUpdate= await prisma.users.update({
+    where: { id: user.id },
+    data: { updated_by: user.id }
+  });
+
+  return { id: user.id,username:user.username,full_name:user.full_name ,email: user.email , created_by:userCreate.created_by ,updated_by:userUpdate.updated_by};
 }
 
 export async function loginUser(email: string, password: string) {

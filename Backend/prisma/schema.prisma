@@ -15,52 +15,59 @@ datasource db {
 }
 
 model users {
-  id            Int         @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   username      String
   full_name     String
-  email         String      @unique
+  email         String   @unique
   password      String
   photo_profile String?
   bio           String?
-  created_at    DateTime    @default(now())
-  // created_by    Int?
-  update_at     DateTime    @default(now())
-  // updated_by    Int
-  usersId       Int?
-  replies       replies[]
-  likes         likes[]
-  following     following[] @relation("UserFollowings")
-  followers     following[] @relation("UserFollowers")
-  threads       threads[]
+  created_at    DateTime @default(now())
+  created_by    Int
+  update_at     DateTime @default(now())
+  updated_by    Int
+
+  createdByUserId users?    @relation("created_by_user_id", fields: [created_by], references: [id])
+  updatedByUserId users?    @relation("updated_by_user_id", fields: [updated_by], references: [id])
+  replies         replies[]
+  likes           likes[]
+
+  updated_by_user_id     users[]   @relation("updated_by_user_id")
+  created_by_user_id     users[]   @relation("created_by_user_id")
+  following              follow[]  @relation("UserFollowings")
+  followers              follow[]  @relation("UserFollowers")
+  created_by_user_thread threads[] @relation("created_by_user")
+  updated_by_user_thread threads[] @relation("updated_by_user")
 }
 
 model replies {
   id         Int      @id @default(autoincrement())
   user_id    Int
   thread_id  Int
-  image      Int
+  image      String
   content    String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
   updatedby  Int
 
-  users  users   @relation(fields: [user_id], references: [id])
-  thread threads @relation(fields: [thread_id], references: [id])
+  users users @relation(fields: [user_id], references: [id])
+  // number_of_replies_thread threads[] @relation("number_of_replies_thread")
 }
 
 model threads {
-  id                Int       @id @default(autoincrement())
+  id                Int      @id @default(autoincrement())
   content           String
   image             String
   number_of_replies Int
-  created_at        DateTime  @default(now())
-  createdBy         Int
-  updated_at        Int
+  created_at        DateTime @default(now())
+  created_by        Int
+  updated_at        DateTime @default(now())
   updated_by        Int
-  replies           replies[]
-  likes             likes[]
 
-  users users @relation(fields: [createdBy], references: [id])
+  // likes                    likes[]
+  // number_of_replies_thread replies @relation("number_of_replies_thread", fields: [number_of_replies], references: [id])
+  created_by_user_thread users @relation("created_by_user", fields: [created_by], references: [id])
+  updated_by_user_thread users @relation("updated_by_user", fields: [updated_by], references: [id])
 }
 
 model likes {
@@ -72,11 +79,11 @@ model likes {
   updated_at DateTime @default(now())
   updated_by Int
 
-  users   users   @relation(fields: [user_id], references: [id])
-  threads threads @relation(fields: [thread_id], references: [id])
+  users users @relation(fields: [user_id], references: [id])
+  // threads threads @relation(fields: [thread_id], references: [id])
 }
 
-model following {
+model follow {
   id           Int      @id @default(autoincrement())
   following_id Int
   followers_id Int
