@@ -9,16 +9,19 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-import { useNavigate, Link } from "react-router-dom";
-
-// const navigate = useNavigate();
-
-// const handleLogout = () => {
-//   localStorage.removeItem("token");
-// };
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
 
 export function SidebarKiri() {
-  // navigate("/login");
+  const { token, logout } = useAuth();
+  // const { logout } = useContext(AuthContext);
+
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
   return (
     <div className="flex-1 ">
       <h1 className="text-6xl text-green-500">Circle</h1>
@@ -30,11 +33,15 @@ export function SidebarKiri() {
           <li>Profile</li>
           <Button className="bg-green-500 rounded-full">Create Post</Button>
         </ul>
-        <Button asChild className="bg-green-500 rounded-full cursor-pointer">
-          <Link to="/login" className="">
-            Button
-          </Link>
-        </Button>
+
+        {token && (
+          <Button
+            onClick={handleLogout}
+            className="bg-green-500 rounded-full cursor-pointer"
+          >
+            Logout
+          </Button>
+        )}
       </Card>
     </div>
   );

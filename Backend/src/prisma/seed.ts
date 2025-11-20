@@ -16,10 +16,10 @@ async function main() {
 
     const threads =await prisma.threads.createMany({
         data:[
-            {content:"Test 1",image:"fakhri1@example.com",number_of_replies:3,created_by:1,updated_by:1},
-            {content:"Test 2",image:"fakhri2@example.com",number_of_replies:5,created_by:1,updated_by:1},
-            {content:"Test 3",image:"fakhri3@example.com",number_of_replies:6,created_by:1,updated_by:1},
-            {content:"Test 4",image:"fakhri4@example.com",number_of_replies:9,created_by:1,updated_by:1},
+            {content:"Test 1",image:"https://placehold.co/600x400",number_of_replies:3,created_by:1,updated_by:1},
+            {content:"Test 2",image:"https://placehold.co/600x400",number_of_replies:5,created_by:1,updated_by:1},
+            {content:"Test 3",image:"https://placehold.co/600x400",number_of_replies:6,created_by:1,updated_by:1},
+            {content:"Test 4",image:"https://placehold.co/600x400",number_of_replies:9,created_by:1,updated_by:1},
 
 
         ]

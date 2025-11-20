@@ -6,13 +6,9 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  CardDescription
+  CardDescription,
 } from "@/components/ui/card";
-import {
-  Field,
-  FieldGroup,
-  FieldDescription
-} from "@/components/ui/field";
+import { Field, FieldGroup, FieldDescription } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { api } from "@/services/api";
 import { useNavigate } from "react-router-dom";
@@ -26,7 +22,7 @@ type LoginType = {
 export function Login() {
   const [form, setForm] = useState<LoginType>({
     email: "",
-    password: ""
+    password: "",
   });
 
   const navigate = useNavigate();
@@ -47,11 +43,10 @@ export function Login() {
         return;
       }
 
-      login(token);                   
-      navigate("/thread");            
+      login(token);
+      navigate("/");
 
       alert("Login berhasil!");
-
     } catch (error) {
       console.error(error);
       alert("Email atau password salah!");
@@ -69,7 +64,6 @@ export function Login() {
         <CardContent>
           <form onSubmit={handleSubmit}>
             <FieldGroup>
-
               <Field>
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -105,7 +99,6 @@ export function Login() {
                   </a>
                 </FieldDescription>
               </Field>
-
             </FieldGroup>
           </form>
         </CardContent>

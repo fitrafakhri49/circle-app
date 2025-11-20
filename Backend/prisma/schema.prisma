@@ -23,9 +23,9 @@ model users {
   photo_profile String?
   bio           String?
   created_at    DateTime @default(now())
-  created_by    Int
+  created_by    Int?
   update_at     DateTime @default(now())
-  updated_by    Int
+  updated_by    Int?
 
   createdByUserId users?    @relation("created_by_user_id", fields: [created_by], references: [id])
   updatedByUserId users?    @relation("updated_by_user_id", fields: [updated_by], references: [id])
@@ -57,17 +57,17 @@ model replies {
 model threads {
   id                Int      @id @default(autoincrement())
   content           String
-  image             String
-  number_of_replies Int
+  image             String?
+  number_of_replies Int      @default(0)
   created_at        DateTime @default(now())
   created_by        Int
   updated_at        DateTime @default(now())
   updated_by        Int
 
-  // likes                    likes[]
+  likes                  likes[]
   // number_of_replies_thread replies @relation("number_of_replies_thread", fields: [number_of_replies], references: [id])
-  created_by_user_thread users @relation("created_by_user", fields: [created_by], references: [id])
-  updated_by_user_thread users @relation("updated_by_user", fields: [updated_by], references: [id])
+  created_by_user_thread users   @relation("created_by_user", fields: [created_by], references: [id])
+  updated_by_user_thread users   @relation("updated_by_user", fields: [updated_by], references: [id])
 }
 
 model likes {
@@ -77,10 +77,12 @@ model likes {
   created_at DateTime @default(now())
   created_by Int
   updated_at DateTime @default(now())
-  updated_by Int
+  updated_by Int?
 
-  users users @relation(fields: [user_id], references: [id])
-  // threads threads @relation(fields: [thread_id], references: [id])
+  users   users   @relation(fields: [user_id], references: [id])
+  threads threads @relation(fields: [thread_id], references: [id])
+
+  @@unique([thread_id, user_id])
 }
 
 model follow {

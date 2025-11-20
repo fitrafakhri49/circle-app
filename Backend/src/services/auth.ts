@@ -3,27 +3,37 @@ import bcrypt from "bcrypt";
 import { prisma } from "../prisma/client";
 import { signToken } from "../utils/jwt";
 
-export async function registerUser(username: string, full_name: string, email:string,password:string) {
-
-
+export async function registerUser(
+  username: string,
+  full_name: string,
+  email: string,
+  password: string
+) {
   const hashed = await bcrypt.hash(password, 10);
 
+ 
   const user = await prisma.users.create({
-    data: { username,full_name,email, password: hashed },
+    data: {
+      username,
+      full_name,
+      email,
+      password: hashed,
+      created_by:null,
+      updated_by:null
+    },
   });
 
-  const userCreate= await prisma.users.update({
+  const updatedUser = await prisma.users.update({
     where: { id: user.id },
-    data: { created_by: user.id }
+    data: {
+      created_by: user.id,
+      updated_by: user.id,
+    },
   });
 
-  const userUpdate= await prisma.users.update({
-    where: { id: user.id },
-    data: { updated_by: user.id }
-  });
-
-  return { id: user.id,username:user.username,full_name:user.full_name ,email: user.email , created_by:userCreate.created_by ,updated_by:userUpdate.updated_by};
+  return updatedUser;
 }
+
 
 export async function loginUser(email: string, password: string) {
   const user = await prisma.users.findUnique({ where: {email} });

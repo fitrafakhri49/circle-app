@@ -1,8 +1,8 @@
 import { createContext } from "react";
+import type { ThreadType } from "../types/ThreadType";
 
-export interface ThreadType {
-  content: string;
-  image: string;
-  number_of_replies: number;
+export interface ThreadContextType {
+  threads: ThreadType[];
+  createThread: (content: string, image: string) => void;
 }
-export const ThreadContext = createContext<ThreadType[] | null>(null);
+export const ThreadContext = createContext<ThreadContextType | null>(null);
