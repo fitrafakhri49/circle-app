@@ -27,9 +27,7 @@ export function Home() {
         </div>
       </div>
 
-      <div className="flex-1">
-        <SidebarKanan />
-      </div>
+      <div className="flex-1">{/* <SidebarKanan /> */}</div>
     </div>
   );
 }

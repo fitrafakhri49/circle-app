@@ -1,11 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { ThreadContext } from "./ThreadContext";
 import type { ThreadType } from "../types/ThreadType";
+import { AuthContext } from "../context/AuthContext";
 
 import { socket } from "../lib/socket";
 
 export const ThreadProvider = ({ children }: { children: React.ReactNode }) => {
   const [threads, setThreads] = useState<ThreadType[]>([]);
+  const authContext = useContext(AuthContext);
+  const user = authContext?.user; // aman, bisa null
 
   useEffect(() => {
     socket.on("new-thread", (data: ThreadType) => {
@@ -18,7 +21,16 @@ export const ThreadProvider = ({ children }: { children: React.ReactNode }) => {
   });
 
   const createThread = (content: string, image: string | File) => {
-    const newThread: ThreadType = { content, image };
+    if (!user) return;
+    const newThread: ThreadType = {
+      content,
+      image,
+      created_by_user_thread: {
+        username: user?.username,
+        id: user.id,
+        full_name: user.full_name,
+      },
+    };
 
     socket.emit("new-thread", newThread);
 

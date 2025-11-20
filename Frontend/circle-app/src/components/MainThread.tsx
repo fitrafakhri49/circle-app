@@ -3,11 +3,19 @@ import { useState, useEffect } from "react";
 import { api } from "@/services/api";
 import { socket } from "../lib/socket";
 
+type UserType = {
+  id: number;
+  username: string;
+  full_name: string;
+  profile_picture?: string | null;
+};
+
 type ThreadType = {
   id: number;
   content: string;
   image: string;
   number_of_replies: number;
+  created_by_user_thread: UserType;
 };
 
 export function MainThread() {
@@ -52,7 +60,12 @@ export function MainThread() {
 
       {threads.map((thread) => (
         <div key={thread.id} className="mb-4 border-4">
-          <p>Yang Buat :</p>
+          <p>
+            Yang Buat:{" "}
+            <span className="font-semibold">
+              {thread.created_by_user_thread?.username || "Unknown"}
+            </span>
+          </p>
           {thread.image && (
             <img
               src={`http://localhost:3000${thread.image}`}

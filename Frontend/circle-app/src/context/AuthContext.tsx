@@ -1,9 +1,16 @@
 import { createContext } from "react";
 
-export type AuthContexttype={
-    token :string | null;
-    login:(token:string)=>void;
-    logout:()=>void
+export interface UserType {
+  id: number;
+  username: string;
+  full_name: string;
 }
 
-export const AuthContext=createContext<AuthContexttype|null>(null)
+export type AuthContexttype = {
+  user: UserType | null;
+  token: string | null;
+  login: (token: string, userData: UserType) => void;
+  logout: () => void;
+};
+
+export const AuthContext = createContext<AuthContexttype | null>(null);

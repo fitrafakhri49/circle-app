@@ -7,26 +7,53 @@ import { prisma } from "../prisma/client";
 
 export async function getThreads(req: Request, res: Response) {
   try {
-    
-    const threads = await prisma.threads.findMany()
-   
-    res.status(201).json({code:200,status:"success", message: "Get Data Thread Successfully", threads});
+    const threads = await prisma.threads.findMany({
+      orderBy: { created_at: "desc" },
+      include: {
+        created_by_user_thread: {
+          select: {
+            id: true,
+            username: true,
+            full_name: true,
+            photo_profile: true,
+          },
+        },
+        likes: true, 
+      },
+    });
+    res.status(200).json({
+      code: 200,
+      status: "success",
+      message: "Get Data Thread Successfully",
+      threads
+    });
   } catch (err: any) {
-    res.status(400).json({ message: err.message });
+    console.error(err);
+    res.status(400).json({ code: 400, status: "error", message: err.message });
   }
 }
-
 
 export async function getThread(req: Request, res: Response) {
   try {
     const {id}=req.params
+    const thread = await prisma.threads.findUnique({
+      where: { id: Number(id) },
+      include: {
+        created_by_user_thread: {
+          select: {
+            id: true,
+            username: true,
+            full_name: true
+          },
+        },
+        likes: true,
+      },
+    });
 
-    const threads = await prisma.threads.findUnique({
-      where:{id:Number(id)},
-      include:{}
-    })
-   
-    res.status(201).json({code:200,status:"success", message: "Get Data Thread Successfully", threads});
+    if (!thread) {
+      return res.status(404).json({ code: 404, status: "error", message: "Thread not found" });
+    }
+    res.status(201).json({code:200,status:"success", message: "Get Data Thread Successfully", thread});
   } catch (err: any) {
     res.status(400).json({ message: err.message });
   }
