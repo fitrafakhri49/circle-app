@@ -1,7 +1,7 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart } from "lucide-react";
 import { useState, useEffect } from "react";
 import { api } from "@/services/api";
+import { socket } from "../lib/socket";
 
 type ThreadType = {
   id: number;
@@ -33,12 +33,26 @@ export function MainThread() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const handler = (data: ThreadType) => {
+      setThreads((prev) => {
+        const exists = prev.some((t) => t.id === data.id);
+        if (exists) return prev;
+        return [data, ...prev];
+      });
+    };
+    socket.on("new-thread", handler);
+    return () => {
+      socket.off("new-thread", handler);
+    };
+  }, []);
   return (
     <div>
       <h1>Threads</h1>
 
       {threads.map((thread) => (
         <div key={thread.id} className="mb-4 border-4">
+          <p>Yang Buat :</p>
           {thread.image && (
             <img
               src={`http://localhost:3000${thread.image}`}
@@ -46,7 +60,7 @@ export function MainThread() {
               className="w-full rounded-md"
             />
           )}
-          <p className="mt-2">{thread.content}</p>
+          <p className="mt-4">{thread.content}</p>
           <p>Number of replies :{thread.number_of_replies}</p>
           <div
             onClick={() => handleClick(thread.id)}

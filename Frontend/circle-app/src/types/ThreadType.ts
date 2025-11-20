@@ -1,4 +1,5 @@
 export interface ThreadType {
     content: string;
-    image: string |File
+    image: string |File,
+
   }

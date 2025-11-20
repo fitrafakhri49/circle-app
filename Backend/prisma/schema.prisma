@@ -16,24 +16,24 @@ datasource db {
 
 model users {
   id            Int      @id @default(autoincrement())
-  username      String
+  username      String   @unique
   full_name     String
   email         String   @unique
   password      String
   photo_profile String?
   bio           String?
   created_at    DateTime @default(now())
-  created_by    Int?
+  created_by    String?
   update_at     DateTime @default(now())
-  updated_by    Int?
+  updated_by    String?
 
-  createdByUserId users?    @relation("created_by_user_id", fields: [created_by], references: [id])
-  updatedByUserId users?    @relation("updated_by_user_id", fields: [updated_by], references: [id])
+  createdByUserId users?    @relation("created_by_user", fields: [created_by], references: [username])
+  updatedByUserId users?    @relation("updated_by_user", fields: [updated_by], references: [username])
   replies         replies[]
   likes           likes[]
 
-  updated_by_user_id     users[]   @relation("updated_by_user_id")
-  created_by_user_id     users[]   @relation("created_by_user_id")
+  updated_by_user        users[]   @relation("updated_by_user")
+  created_by_user        users[]   @relation("created_by_user")
   following              follow[]  @relation("UserFollowings")
   followers              follow[]  @relation("UserFollowers")
   created_by_user_thread threads[] @relation("created_by_user")
@@ -60,14 +60,14 @@ model threads {
   image             String?
   number_of_replies Int      @default(0)
   created_at        DateTime @default(now())
-  created_by        Int
+  created_by        String
   updated_at        DateTime @default(now())
-  updated_by        Int
+  updated_by        String
 
   likes                  likes[]
   // number_of_replies_thread replies @relation("number_of_replies_thread", fields: [number_of_replies], references: [id])
-  created_by_user_thread users   @relation("created_by_user", fields: [created_by], references: [id])
-  updated_by_user_thread users   @relation("updated_by_user", fields: [updated_by], references: [id])
+  created_by_user_thread users   @relation("created_by_user", fields: [created_by], references: [username])
+  updated_by_user_thread users   @relation("updated_by_user", fields: [updated_by], references: [username])
 }
 
 model likes {

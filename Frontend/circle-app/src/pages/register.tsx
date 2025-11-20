@@ -7,15 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-} from "@/components/ui/field";
+import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { api } from "@/services/api";
 import { useNavigate } from "react-router-dom";
-// import { useAuth } from "../hooks/useAuth"; 
+// import { useAuth } from "../hooks/useAuth";
 
 type RegisterType = {
   username: string;
@@ -33,7 +29,6 @@ export function Register() {
   });
 
   const navigate = useNavigate();
-  // const { login } = useAuth();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.id]: e.target.value });
@@ -43,12 +38,9 @@ export function Register() {
     e.preventDefault();
 
     try {
-     await api.post("api/v1/auth/register", form);
- 
-
+      await api.post("api/v1/auth/register", form);
       alert("Register berhasil!");
       navigate("/login");
-
     } catch (error) {
       console.error(error);
       alert("Register gagal!");

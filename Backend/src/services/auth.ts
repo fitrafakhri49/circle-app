@@ -26,12 +26,14 @@ export async function registerUser(
   const updatedUser = await prisma.users.update({
     where: { id: user.id },
     data: {
-      created_by: user.id,
-      updated_by: user.id,
+      created_by: user.username,
+      updated_by: user.username,
     },
   });
 
-  return updatedUser;
+
+
+  return {id:user.id ,email:user.email,username:user.username};
 }
 
 
@@ -42,6 +44,7 @@ export async function loginUser(email: string, password: string) {
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new Error("Wrong password");
 
-  const token = signToken({ id: user.id,email: user.email , });
-  return { id: user.id, email: user.email };
+  const token = signToken({ id: user.id,email: user.email ,username:user.username });
+  return { id: user.id, email: user.email,username:user.username };
 }
+

@@ -1,7 +1,6 @@
 import { Register } from "./pages/register";
 import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 
-import { Button } from "./components/ui/button";
 import { Login } from "./pages/login";
 import { AuthProvider } from "./context/AuthProvider";
 import PrivateRoute from "./lib/PrivateRoute";
