@@ -38,12 +38,14 @@ export function Login() {
       const res = await api.post("api/v1/auth/login", form);
 
       const token = res.data?.token;
-      if (!token) {
-        alert("Login gagal: token tidak tersedia");
+      const userData = res.data?.user; // ✅ ambil user dari response
+
+      if (!token || !userData) {
+        alert("Login gagal: token tidak tersedia ");
         return;
       }
 
-      login(token);
+      login(token, userData);
       navigate("/");
 
       alert("Login berhasil!");

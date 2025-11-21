@@ -15,11 +15,7 @@ export async function handleRegister(req: Request, res: Response) {
     const { username,full_name,email, password} = req.body;
 
     const user = await registerUser(username,full_name,email, password);
-    
-        if (!user) {
-          return error
-        }
-        
+
     const token=signToken(user)
     res.status(201).json({code:200,status:"success", message: "Registrasi berhasil. Akun berhasil dibuat.", user ,token});
   } catch (err: any) {

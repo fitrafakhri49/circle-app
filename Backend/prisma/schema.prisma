@@ -23,34 +23,36 @@ model users {
   photo_profile String?
   bio           String?
   created_at    DateTime @default(now())
-  created_by    String?
+  created_by    Int?
   update_at     DateTime @default(now())
-  updated_by    String?
+  updated_by    Int?
 
-  createdByUserId users?    @relation("created_by_user", fields: [created_by], references: [username])
-  updatedByUserId users?    @relation("updated_by_user", fields: [updated_by], references: [username])
+  createdByUserId users?    @relation("created_by_user", fields: [created_by], references: [id])
+  updatedByUserId users?    @relation("updated_by_user", fields: [updated_by], references: [id])
   replies         replies[]
   likes           likes[]
 
-  updated_by_user        users[]   @relation("updated_by_user")
-  created_by_user        users[]   @relation("created_by_user")
-  following              follow[]  @relation("UserFollowings")
-  followers              follow[]  @relation("UserFollowers")
-  created_by_user_thread threads[] @relation("created_by_user")
-  updated_by_user_thread threads[] @relation("updated_by_user")
+  updated_by_user users[]   @relation("updated_by_user")
+  created_by_user users[]   @relation("created_by_user")
+  following       follow[]  @relation("UserFollowings")
+  followers       follow[]  @relation("UserFollowers")
+  user            threads[] @relation("created_by_user")
+  userUp          threads[] @relation("updated_by_user")
 }
 
 model replies {
   id         Int      @id @default(autoincrement())
   user_id    Int
   thread_id  Int
-  image      String
+  image      String?
   content    String
   created_at DateTime @default(now())
   updated_at DateTime @default(now())
-  updatedby  Int
+  updatedby  Int?
 
-  users users @relation(fields: [user_id], references: [id])
+  thread threads @relation(fields: [thread_id], references: [id])
+
+  user users @relation(fields: [user_id], references: [id])
   // number_of_replies_thread threads[] @relation("number_of_replies_thread")
 }
 
@@ -60,14 +62,15 @@ model threads {
   image             String?
   number_of_replies Int      @default(0)
   created_at        DateTime @default(now())
-  created_by        String
+  created_by        Int
   updated_at        DateTime @default(now())
-  updated_by        String
+  updated_by        Int
 
+  user                   users     @relation("created_by_user", fields: [created_by], references: [id])
+  updated_by_user_thread users     @relation("updated_by_user", fields: [updated_by], references: [id])
   likes                  likes[]
-  // number_of_replies_thread replies @relation("number_of_replies_thread", fields: [number_of_replies], references: [id])
-  created_by_user_thread users   @relation("created_by_user", fields: [created_by], references: [username])
-  updated_by_user_thread users   @relation("updated_by_user", fields: [updated_by], references: [username])
+  replies                replies[]
+  // number_of_replies_thread replies   @relation("number_of_replies_thread", fields: [number_of_replies], references: [id])
 }
 
 model likes {
@@ -75,7 +78,7 @@ model likes {
   user_id    Int
   thread_id  Int
   created_at DateTime @default(now())
-  created_by Int
+  created_by Int?
   updated_at DateTime @default(now())
   updated_by Int?
 

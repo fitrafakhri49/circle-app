@@ -1,29 +1,42 @@
 import { Register } from "./pages/register";
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
-
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Login } from "./pages/login";
 import { AuthProvider } from "./context/AuthProvider";
 import PrivateRoute from "./lib/PrivateRoute";
 import { Home } from "./pages/home";
 import { ThreadProvider } from "./context/ThreadProvider";
-// import { ThreadProvider } from "./context/ThreadProvider";
+import { Replies } from "./pages/Replies";
+import { MainThread } from "./components/MainThread";
+import { PostThread } from "./components/PostThread";
+import { ThreadAndPost } from "./pages/ThreadAndPost";
+import { ReplyProvider } from "./context/RepliesProvider";
 
 function App() {
   return (
-    <ThreadProvider>
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route
-              path="/"
-              element={<PrivateRoute>{<Home />}</PrivateRoute>}
-            ></Route>
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </ThreadProvider>
+    <ReplyProvider>
+      <ThreadProvider>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/" element={<Navigate to="/thread" replace />} />
+              <Route
+                path="/thread/*"
+                element={
+                  <PrivateRoute>
+                    <Home />
+                  </PrivateRoute>
+                }
+              >
+                <Route index element={<ThreadAndPost />} />
+                <Route path=":id" element={<Replies />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </AuthProvider>
+      </ThreadProvider>
+    </ReplyProvider>
   );
 }
 
