@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { ThreadContext } from "./ThreadContext";
 import type { ThreadType } from "../types/ThreadType";
 import { AuthContext } from "../context/AuthContext";
-import type { UserType } from "../types/UserType";
+// import type { UserType } from "../types/UserType";
 import { api } from "../services/api";
 
 import { socket } from "../lib/socket";

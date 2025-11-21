@@ -1,13 +1,11 @@
 import { Register } from "./pages/register";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
-import { Login } from "./pages/login";
+import { Login } from "../src/pages/Login";
 import { AuthProvider } from "./context/AuthProvider";
 import PrivateRoute from "./lib/PrivateRoute";
 import { Home } from "./pages/home";
 import { ThreadProvider } from "./context/ThreadProvider";
 import { Replies } from "./pages/Replies";
-import { MainThread } from "./components/MainThread";
-import { PostThread } from "./components/PostThread";
 import { ThreadAndPost } from "./pages/ThreadAndPost";
 import { ReplyProvider } from "./context/RepliesProvider";
 

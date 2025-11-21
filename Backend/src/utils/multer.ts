@@ -15,7 +15,7 @@ export const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
     const ext = path.extname(file.originalname);
-    if (ext !== ".jpg" && ext !== ".png" && ext !== ".jpeg") {
+    if (ext !== ".jpg" && ext !== ".png" && ext !== ".jpeg"  ) {
       return cb(null, false);
     }
     cb(null, true);

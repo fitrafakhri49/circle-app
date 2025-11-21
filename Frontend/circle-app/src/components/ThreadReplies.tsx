@@ -1,16 +1,10 @@
-import { Heart } from "lucide-react";
 import { useState, useEffect } from "react";
 import { api } from "@/services/api";
 import { socket } from "../lib/socket";
-import type { ThreadType } from "../types/ThreadType";
-// import type {} from "../types/UserType";
-import { MessageCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import type { ReplyType } from "../types/ReplyType";
 import { useParams } from "react-router-dom";
 
 export function ThreadReplies() {
-  const navigate = useNavigate();
   const [like, setLike] = useState<{ [key: number]: boolean }>({});
   const [replies, setReplies] = useState<ReplyType[]>([]);
 
@@ -61,6 +55,7 @@ export function ThreadReplies() {
               {reply.user?.username ?? "Siapa Gatau"}
             </span>
           </div>
+          <img src={`http://localhost:3000${reply.image}`} alt="" />
           <p>{reply.content}</p>
         </div>
       ))}

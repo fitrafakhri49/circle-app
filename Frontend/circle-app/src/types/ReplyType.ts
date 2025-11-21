@@ -5,5 +5,4 @@ export interface ReplyType {
     image: string |File;
     user: UserType; 
     id:number;
-    
   }
