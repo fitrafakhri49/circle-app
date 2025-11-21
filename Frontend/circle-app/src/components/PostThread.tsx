@@ -1,27 +1,26 @@
 import Profile from "../assets/img/profile_freepik.jpeg";
 import AddImage from "../assets/img/AddImage.png";
 import { Button } from "./ui/button";
-import { useThread } from "../hooks/useThread";
-import { useState, useEffect } from "react";
-import { api } from "../services/api";
+import { useState, useEffect, useContext } from "react";
+import { api } from "@/services/api";
+import { ThreadContext } from "../context/ThreadContext";
 import { socket } from "../lib/socket";
+
+import type { ThreadType } from "../types/ThreadType";
 
 export function PostThread() {
   const [form, setForm] = useState({ content: "", image: "" });
   const [file, setFile] = useState<File | null>(null);
   const [successMessage, setSuccessMessage] = useState("");
   const [loading, setLoading] = useState(0);
-  const { createThread } = useThread();
+
+  const threadContext = useContext(ThreadContext);
+  if (!threadContext) return null;
+  const { threads, setThreads } = threadContext;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.id]: e.target.value });
   };
-
-  useEffect(() => {
-    if (loading <= 0) return;
-    const timer = setInterval(() => setLoading((loading) => loading - 1), 1000);
-    return () => clearInterval(timer);
-  }, [loading]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -32,30 +31,38 @@ export function PostThread() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(10);
+    if (!form.content.trim() && !file) return;
+
+    setLoading(3);
     try {
       const formData = new FormData();
       formData.append("content", form.content);
-      if (file) formData.append("image", file);
+      if (file instanceof File) formData.append("image", file);
 
-      const res = await api.post("api/v1/thread", formData, {
+      const res = await api.post("/api/v1/thread", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      const newThread = res.data.thread;
+      const newThread: ThreadType = res.data.thread;
       socket.emit("new-thread", newThread);
-
+      setThreads((prev) => [newThread, ...prev]);
       setSuccessMessage("Thread terkirim!");
       setForm({ content: "", image: "" });
       setFile(null);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
+      setSuccessMessage("Gagal mengirim thread.");
     }
   };
-
+  useEffect(() => {
+    if (loading <= 0) return;
+    const timer = setInterval(() => setLoading((l) => l - 1), 1000);
+    return () => clearInterval(timer);
+  }, [loading]);
   return (
     <div className="text-white px-4">
       {successMessage && <p className="text-green-500">{successMessage}</p>}
+
       <form className="flex gap-3 items-center" onSubmit={handleSubmit}>
         <img className="rounded-full w-10" src={Profile} alt="" />
         <input
@@ -75,7 +82,10 @@ export function PostThread() {
         <label htmlFor="image" className="cursor-pointer">
           <img className="w-10" src={AddImage} alt="" />
         </label>
-        <Button className="bg-green-500 mr-10" disabled={loading > 0}>
+        <Button
+          className="bg-green-500 mr-10 cursor-pointer"
+          disabled={loading > 0}
+        >
           {loading > 0 ? `Wait ${loading}s` : "Post"}
         </Button>
       </form>

@@ -1,41 +1,67 @@
-import { prisma } from "./client";
+// src/prisma/seed.ts
+import { PrismaClient } from "@prisma/client";
 
+const prisma = new PrismaClient();
 
 async function main() {
-    await prisma.threads.deleteMany()
-    // await prisma.users.deleteMany()
-   
-//    const users =await prisma.users.createMany({
-//     data : [
-//         {username:"Fakhri1",full_name:"Fakhri 1",email:"fakhri1@gmail.com",password:"12345678",photo_profile:"Test1",bio:"Test1"},
-//         {username:"Fakhri2",full_name:"Fakhri 2",email:"fakhri2@gmail.com",password:"12345678",photo_profile:"Test2",bio:"Test2" },
-//         {username:"Fakhri3",full_name:"Fakhri 3",email:"fakhri3@gmail.com",password:"12345678",photo_profile:"Test3",bio:"Test3"},
-//         {username:"Fakhri4",full_name:"Fakhri 4",email:"fakhri4@gmail.com",password:"12345678",photo_profile:"Test4",bio:"Test4"}
-//     ]
-//    })
 
-    const threads =await prisma.threads.createMany({
-        data:[
-            {content:"Test 1",image:"https://placehold.co/600x400",number_of_replies:3,created_by:1,updated_by:1},
-            {content:"Test 2",image:"https://placehold.co/600x400",number_of_replies:5,created_by:1,updated_by:1},
-            {content:"Test 3",image:"https://placehold.co/600x400",number_of_replies:6,created_by:1,updated_by:1},
-            {content:"Test 4",image:"https://placehold.co/600x400",number_of_replies:9,created_by:1,updated_by:1},
+  const userId = 2;                 
+  const threadId = 2;               
 
+  
 
-        ]
-    })
+await prisma.threads.createMany({
+  data: [
+    {
+      content: "Thread pertama dari user 1",
+      image: "",
+      created_by:userId,
+      updated_by: userId,
+      
+    },
+    {
+      content: "Thread kedua dari user 1",
+      image: "",
+      created_by:userId,
+      updated_by: userId
+    },
+    {
+      content: "Thread ketiga dari user 1",
+      image: "",
+      created_by:userId,
+      updated_by: userId
+    }
+  ]
+});
+  // Seeding replies untuk thread yang sudah ada
+  await prisma.replies.createMany({
+    data: [
+      {
+        content: "Ini reply pertama untuk thread Test",
+        user_id: userId,
+        thread_id: threadId,
+      },
+      {
+        content: "Ini reply kedua untuk thread Test",
+        user_id: userId,
+        thread_id: threadId,
+      },
+      {
+        content: "Ini reply ketiga untuk thread Test",
+        user_id: userId,
+        thread_id: threadId,
+      },
+    ],
+  });
 
+  console.log("Seeding replies selesai untuk thread yang sudah ada!");
 }
 
-
-
 main()
-.then( () => {
-    console.log("seeding berhasil");
-})
-.catch(async (e) => {
-    console.error(e)
-})
-.finally(async () => {
-    await prisma.$disconnect
-})
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });

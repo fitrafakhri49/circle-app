@@ -18,16 +18,14 @@ export async function registerUser(
       full_name,
       email,
       password: hashed,
-      created_by:null,
-      updated_by:null
     },
   });
 
   const updatedUser = await prisma.users.update({
     where: { id: user.id },
     data: {
-      created_by: user.username,
-      updated_by: user.username,
+      created_by: user.id,
+      updated_by: user.id,
     },
   });
 

@@ -12,6 +12,7 @@ import { SidebarKiri } from "../components/sidebar-kiri";
 import { SidebarKanan } from "../components/sidebar-kanan";
 import { PostThread } from "@/components/PostThread";
 import { MainThread } from "@/components/MainThread";
+import { Outlet } from "react-router-dom";
 
 export function Home() {
   return (
@@ -20,10 +21,11 @@ export function Home() {
         <SidebarKiri />
       </div>
       <div className="flex flex-2 border-y flex-col overflow-hidden ">
-        <h1 className="mb-6">Home</h1>
-        <PostThread />
         <div className="overflow-y-scroll ">
-          <MainThread />
+          {/* <h1 className="mb-6">Home</h1> */}
+          {/* <PostThread /> */}
+          <Outlet />
+          {/* <MainThread /> */}
         </div>
       </div>
 

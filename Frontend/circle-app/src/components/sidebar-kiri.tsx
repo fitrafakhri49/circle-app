@@ -31,17 +31,16 @@ export function SidebarKiri() {
           <li>Search</li>
           <li>Follow</li>
           <li>Profile</li>
-          <Button className="bg-green-500 rounded-full">Create Post</Button>
-        </ul>
 
-        {token && (
-          <Button
-            onClick={handleLogout}
-            className="bg-green-500 rounded-full cursor-pointer"
-          >
-            Logout
-          </Button>
-        )}
+          {token && (
+            <Button
+              onClick={handleLogout}
+              className="bg-green-500 rounded-full cursor-pointer"
+            >
+              Logout
+            </Button>
+          )}
+        </ul>
       </Card>
     </div>
   );
