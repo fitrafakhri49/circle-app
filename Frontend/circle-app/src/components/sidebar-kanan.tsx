@@ -22,9 +22,9 @@ export function RightSidebar() {
   }, []);
 
   return (
-    <div className="w-[300px] fixed top-0 right-0 h-screen bg-black text-white p-4 border-l border-gray-800">
+    <div className=" text-white p-4 ">
       <div className="bg-[#121212] rounded-2xl p-4 shadow-lg border border-gray-800">
-        <h3 className="text-sm font-semibold mb-3">My Profile</h3>
+        <h3 className="text-sm font-semibold mb-3">My Profile COntoh</h3>
 
         <div className="relative">
           <div className="h-20 w-full rounded-xl bg-gradient-to-r from-green-200 via-yellow-300 to-yellow-500" />
@@ -49,7 +49,10 @@ export function RightSidebar() {
                 @{users?.username ?? "username"}
               </p>
             </div>
-            <button className="text-xs border border-gray-700 px-3 py-1 rounded-full hover:bg-gray-800 cursor-pointer">
+            <button
+              onClick={() => navigate("/editProfile")}
+              className="text-xs border border-gray-700 px-3 py-1 rounded-full hover:bg-gray-800 cursor-pointer"
+            >
               Edit Profile
             </button>
           </div>

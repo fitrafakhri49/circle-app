@@ -8,9 +8,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-
+import { Search, House, UserPlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { Link } from "react-router-dom";
 
 export function SidebarKiri() {
   const { token, logout } = useAuth();
@@ -26,14 +27,21 @@ export function SidebarKiri() {
       <h1 className="text-6xl text-green-500">Circle</h1>
       <Card className="bg-transparent border-none shadow-none flex flex-col">
         <ul className="text-2xl flex flex-col gap-6 px-5">
-          <li className="cursor-pointer">Home</li>
-          <li className="cursor-pointer">Search</li>
-          <li className="cursor-pointer">Follow</li>
-          <li
-            className="cursor-pointer"
-            onClick={() => navigate("/editProfile")}
+          <Link to="/thread" className="flex items-center gap-2">
+            <House /> <span>Home</span>
+          </Link>
+          <li className="cursor-pointer flex items-center gap-2">
+            <Search className="w-5 h-5" />
+            <span>Search</span>
+          </li>
+          <Link
+            to="/thread/follow/follower"
+            className="flex items-center gap-2"
           >
-            Profile
+            <UserPlus /> <span>Following</span>
+          </Link>
+          <li className="cursor-pointer flex items-center gap-2">
+            <UserPlus /> <span>Profile</span>
           </li>
 
           {token && (

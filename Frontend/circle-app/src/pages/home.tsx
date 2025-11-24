@@ -16,16 +16,15 @@ import { Outlet } from "react-router-dom";
 export function Home() {
   return (
     <div className="flex w-full h-screen">
-      <div className="flex-1">
+      <div className="flex-1 ">
         <SidebarKiri />
       </div>
-      <div className="flex flex-2 border-y flex-col overflow-hidden ">
-        <div className="overflow-y-scroll ">
+      <div className="flex-2 h-screen border-y w-full">
+        <div className="h-screen overflow-y-scroll scrollbar-hide">
           <Outlet />
         </div>
       </div>
-
-      <div className="flex-1">
+      <div className="flex-1 ">
         <RightSidebar />
       </div>
     </div>

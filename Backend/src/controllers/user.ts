@@ -40,48 +40,47 @@ export async function getCurrentUser(req: Request, res: Response) {
 
 
 export async function updateProfile(req: Request, res: Response) {
-    try {
-      const user = (req as any).user;
-  
-      if (!user?.id) {
-        return res.status(401).json({ message: "Unauthorized" });
-      }
-  
-      const { bio } = req.body;
-  
-      let photoPath: string | undefined;
-  
-      if (req.file) {
-        photoPath = `/uploads/${req.file.filename}`;
-      }
-  
-      const updated = await prisma.users.update({
-        where: {
-          id: user.id,
-        },
-        data: {
-          bio: bio ?? undefined,
-          photo_profile: photoPath ?? undefined,
-        },
-        select: {
-          id: true,
-          username: true,
-          full_name: true,
-          email: true,
-          photo_profile: true,
-          bio: true,
-          created_at: true,
-        },
-      });
-  
-      return res.status(200).json({
-        status: "success",
-        message: "Profile updated successfully",
-        user: updated,
-      });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Internal server error" });
+  try {
+    const user = (req as any).user;
+
+    if (!user?.id) {
+      return res.status(401).json({ message: "Unauthorized" });
     }
+
+    const { bio } = req.body;
+
+    let photoPath: string | undefined;
+
+    if (req.file) {
+      photoPath = `/uploads/${req.file.filename}`;
+    }
+
+    const updated = await prisma.users.update({
+      where: {
+        id: user.id,
+      },
+      data: {
+        bio: bio ?? undefined,
+        photo_profile: photoPath ?? undefined,
+      },
+      select: {
+        id: true,
+        username: true,
+        full_name: true,
+        email: true,
+        photo_profile: true,
+        bio: true,
+        created_at: true,
+      },
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "Profile updated successfully",
+      user: updated,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Internal server error" });
   }
-  
+}

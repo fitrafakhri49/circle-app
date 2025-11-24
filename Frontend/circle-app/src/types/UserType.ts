@@ -4,6 +4,7 @@ export interface UserType {
   full_name: string;
   photo_profile?: string; 
   bio:string;
+  is_following:boolean
 }
 
 

@@ -10,6 +10,7 @@ import { ThreadAndPost } from "./pages/ThreadAndPost";
 import { ReplyProvider } from "./context/RepliesProvider";
 import { LikeProvider } from "./context/LikeProvider";
 import { UpdateProfile } from "./pages/editProfile";
+import { FollowersPage } from "./pages/follows";
 
 function App() {
   return (
@@ -22,6 +23,8 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
                 <Route path="/" element={<Navigate to="/thread" replace />} />
+
+                {/* Thread */}
                 <Route
                   path="/thread/*"
                   element={
@@ -32,7 +35,10 @@ function App() {
                 >
                   <Route index element={<ThreadAndPost />} />
                   <Route path=":id" element={<Replies />} />
+                  <Route path="follow/:type" element={<FollowersPage />} />
                 </Route>
+
+                {/* Edit profile */}
                 <Route
                   path="/editProfile"
                   element={
@@ -41,6 +47,16 @@ function App() {
                     </PrivateRoute>
                   }
                 />
+
+                {/* Followers / Following dynamic route */}
+                {/* <Route
+                  path="/follows/:type"
+                  element={
+                    <PrivateRoute>
+                      <FollowersPage />
+                    </PrivateRoute>
+                  }
+                /> */}
               </Routes>
             </BrowserRouter>
           </AuthProvider>
