@@ -1,4 +1,4 @@
-// src/utils/jwt.ts
+
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
@@ -8,7 +8,7 @@ export interface UserPayload {
 email:string;
 username:string;
 full_name:string;
-photo_profile?:string;
+photo_profile?:string | null;
 }
 export function signToken(payload: UserPayload) {
   return jwt.sign(payload, JWT_SECRET, { expiresIn: "1d"});

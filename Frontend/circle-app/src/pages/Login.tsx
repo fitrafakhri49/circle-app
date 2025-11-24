@@ -38,7 +38,7 @@ export function Login() {
       const res = await api.post("api/v1/auth/login", form);
 
       const token = res.data?.token;
-      const userData = res.data?.user; // ✅ ambil user dari response
+      const userData = res.data?.user;
 
       if (!token || !userData) {
         alert("Login gagal: token tidak tersedia ");

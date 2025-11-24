@@ -2,10 +2,11 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/context/AuthContext";
 import type { UserType } from "@/types/UserType";
 import { api } from "@/services/api";
+import { useNavigate } from "react-router-dom";
 
 export function RightSidebar() {
-  // const { user } = useContext(AuthContext)!;
   const [users, setUsers] = useState<UserType | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -48,7 +49,7 @@ export function RightSidebar() {
                 @{users?.username ?? "username"}
               </p>
             </div>
-            <button className="text-xs border border-gray-700 px-3 py-1 rounded-full hover:bg-gray-800">
+            <button className="text-xs border border-gray-700 px-3 py-1 rounded-full hover:bg-gray-800 cursor-pointer">
               Edit Profile
             </button>
           </div>

@@ -10,8 +10,7 @@ import {
 } from "@/components/ui/card";
 import { SidebarKiri } from "../components/sidebar-kiri";
 import { RightSidebar } from "../components/sidebar-kanan";
-import { PostThread } from "@/components/PostThread";
-import { MainThread } from "@/components/MainThread";
+
 import { Outlet } from "react-router-dom";
 
 export function Home() {

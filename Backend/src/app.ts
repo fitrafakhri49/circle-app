@@ -8,6 +8,7 @@ import corsMiddleware from "../src/middlewares/cors";
 import reply from "./routes/replies";
 import like from "./routes/like";
 import currentUser from "./routes/user";
+import follows from "./routes/follows";
 
 
 
@@ -42,7 +43,7 @@ io.on("connection", (socket) => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api/v1",authroute,thread,reply,like,currentUser)
+app.use("/api/v1",authroute,thread,reply,like,currentUser,follows)
 app.use("/uploads",express.static(path.join(__dirname,"uploads")))
 server.listen(process.env.PORT,()=>{
     console.log(`server is running at ${process.env.PORT}`)

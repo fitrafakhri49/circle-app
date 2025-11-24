@@ -9,6 +9,7 @@ import { Replies } from "./pages/Replies";
 import { ThreadAndPost } from "./pages/ThreadAndPost";
 import { ReplyProvider } from "./context/RepliesProvider";
 import { LikeProvider } from "./context/LikeProvider";
+import { UpdateProfile } from "./pages/editProfile";
 
 function App() {
   return (
@@ -32,6 +33,14 @@ function App() {
                   <Route index element={<ThreadAndPost />} />
                   <Route path=":id" element={<Replies />} />
                 </Route>
+                <Route
+                  path="/editProfile"
+                  element={
+                    <PrivateRoute>
+                      <UpdateProfile />
+                    </PrivateRoute>
+                  }
+                />
               </Routes>
             </BrowserRouter>
           </AuthProvider>

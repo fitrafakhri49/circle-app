@@ -11,7 +11,6 @@ import { Field, FieldDescription, FieldGroup } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { api } from "@/services/api";
 import { useNavigate } from "react-router-dom";
-// import { useAuth } from "../hooks/useAuth";
 
 type RegisterType = {
   username: string;
