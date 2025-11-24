@@ -47,7 +47,9 @@ export function ThreadReplies() {
           <div className="flex items-center gap-2 mb-1">
             <img
               src={
-                reply.user?.photo_profile ?? "https://i.pravatar.cc/150?img=3"
+                reply.user.photo_profile
+                  ? `http://localhost:3000${reply.user.photo_profile}`
+                  : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
               }
               className="w-8 h-8 rounded-full"
             />

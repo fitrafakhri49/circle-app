@@ -22,15 +22,12 @@ export function MainThread() {
   };
 
   const handleLikeClick = async (threadId: number) => {
-    // ✅ Cegah spam click
     if (loadingIds.current.has(threadId)) return;
 
     loadingIds.current.add(threadId);
 
     try {
       const alreadyLiked = likes[threadId] === true;
-
-      // ===== OPTIMISTIC UI =====
       setLikes((prev) => ({
         ...prev,
         [threadId]: !alreadyLiked,
@@ -48,8 +45,6 @@ export function MainThread() {
             : thread
         )
       );
-
-      // ===== API CALL =====
       if (alreadyLiked) {
         await api.delete(`/api/v1/like?thread_id=${threadId}`);
       } else {
@@ -58,7 +53,6 @@ export function MainThread() {
     } catch (err) {
       console.error("Like toggle error:", err);
 
-      // ===== ROLLBACK IF ERROR =====
       const wasLiked = likes[threadId] === true;
 
       setLikes((prev) => ({
@@ -83,7 +77,6 @@ export function MainThread() {
     }
   };
 
-  // ✅ Fetch Threads
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -96,26 +89,27 @@ export function MainThread() {
     fetchData();
   }, []);
 
-  // ✅ Fetch Likes milik user
   useEffect(() => {
     const getLikes = async () => {
       try {
         const res = await api.get("api/v1/like");
+
         const likeMap: Record<number, boolean> = {};
 
-        res.data.likes.forEach((like: any) => {
+        res.data.likes?.forEach((like: any) => {
           likeMap[like.thread_id] = true;
         });
-
+        setLikes({});
         setLikes(likeMap);
       } catch (err) {
         console.error("Gagal fetch likes:", err);
+        setLikes({});
       }
     };
+
     getLikes();
   }, [setLikes]);
 
-  // ✅ Realtime thread update
   useEffect(() => {
     const handler = (data: ThreadType) => {
       setThreads((prev) => {
@@ -143,11 +137,14 @@ export function MainThread() {
           <div className="flex items-center gap-3 mb-2">
             <img
               src={
-                thread.user.photo_profile ?? "https://i.pravatar.cc/150?img=3"
+                thread.user.photo_profile
+                  ? `http://localhost:3000${thread.user.photo_profile}`
+                  : "https://cdn-icons-png.flaticon.com/512/3135/3135715.png"
               }
               alt={thread.user.username}
               className="w-10 h-10 rounded-full object-cover"
             />
+
             <div>
               <p className="font-semibold">
                 {thread.user.username ?? "Unknown"}

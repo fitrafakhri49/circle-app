@@ -31,18 +31,31 @@ export async function registerUser(
 
 
 
-  return {id:user.id ,email:user.email,username:user.username};
+  return {id:user.id ,email:user.email,username:user.username,full_name:user.full_name};
 }
 
 
 export async function loginUser(email: string, password: string) {
-  const user = await prisma.users.findUnique({ where: {email} });
+  const user = await prisma.users.findUnique({ where: { email } });
   if (!user) throw new Error("User not found");
 
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) throw new Error("Wrong password");
 
-  const token = signToken({ id: user.id,email: user.email ,username:user.username });
-  return { id: user.id, email: user.email,username:user.username };
+  const token = signToken({
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    full_name: user.full_name ?? undefined,
+    photo_profile: user.photo_profile ?? undefined,
+  });
+  
+  return {
+    id: user.id,
+    email: user.email,
+    username: user.username,
+    full_name: user.full_name,
+    photo_profile: user.photo_profile,
+    token,
+  };
 }
-

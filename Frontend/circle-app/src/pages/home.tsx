@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { SidebarKiri } from "../components/sidebar-kiri";
-import { SidebarKanan } from "../components/sidebar-kanan";
+import { RightSidebar } from "../components/sidebar-kanan";
 import { PostThread } from "@/components/PostThread";
 import { MainThread } from "@/components/MainThread";
 import { Outlet } from "react-router-dom";
@@ -22,14 +22,13 @@ export function Home() {
       </div>
       <div className="flex flex-2 border-y flex-col overflow-hidden ">
         <div className="overflow-y-scroll ">
-          {/* <h1 className="mb-6">Home</h1> */}
-          {/* <PostThread /> */}
           <Outlet />
-          {/* <MainThread /> */}
         </div>
       </div>
 
-      <div className="flex-1">{/* <SidebarKanan /> */}</div>
+      <div className="flex-1">
+        <RightSidebar />
+      </div>
     </div>
   );
 }

@@ -9,7 +9,7 @@ const router = express.Router();
 
 router.get("/thread", authenticate,getThreads,);
 router.post("/thread", upload.single("image"),authenticate,PostThread)
-router.get("/thread/:id", getThread);
+router.get("/thread/:id",authenticate, getThread);
 router.post("/thread/:id/like",authenticate,likeThread)
 router.delete("/thread/:id/like",unlikeThread)
 

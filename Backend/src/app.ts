@@ -7,6 +7,7 @@ import http from "http";
 import corsMiddleware from "../src/middlewares/cors";
 import reply from "./routes/replies";
 import like from "./routes/like";
+import currentUser from "./routes/user";
 
 
 
@@ -41,7 +42,7 @@ io.on("connection", (socket) => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api/v1",authroute,thread,reply,like)
+app.use("/api/v1",authroute,thread,reply,like,currentUser)
 app.use("/uploads",express.static(path.join(__dirname,"uploads")))
 server.listen(process.env.PORT,()=>{
     console.log(`server is running at ${process.env.PORT}`)

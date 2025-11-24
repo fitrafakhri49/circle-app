@@ -28,7 +28,8 @@ export async function getThreads(req: Request, res: Response) {
               select: {
                 id: true,
                 username: true,
-                full_name: true
+                full_name: true,
+                photo_profile:true
               }
             }
           }
@@ -69,7 +70,8 @@ export async function getThread(req: Request, res: Response) {
           select: {
             id: true,
             username: true,
-            full_name: true
+            full_name: true,
+            photo_profile:true
           },
         },
         likes: true,
@@ -82,7 +84,8 @@ export async function getThread(req: Request, res: Response) {
               select:{
                 id:true,
                 username:true,
-                full_name:true
+                full_name:true,
+                photo_profile:true
               }
             }
           }

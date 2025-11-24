@@ -1,5 +1,4 @@
 import { useEffect, useState, useContext } from "react";
-import type { LikeType } from "@/types/LikeType";
 import { LikeContext } from "@/context/LikeContext";
 import { AuthContext } from "@/context/AuthContext";
 import { api } from "@/services/api";
@@ -17,14 +16,16 @@ export const LikeProvider = ({ children }: { children: React.ReactNode }) => {
 
   // ✅ Load likes milik user yang login
   useEffect(() => {
-    const fetchUserLikes = async () => {
-      if (!user) return;
+    if (!user) {
+      setLikes({});
+      return;
+    }
 
+    const fetchUserLikes = async () => {
       try {
         const res = await api.get("/api/v1/like");
 
         const likeMap: LikeMap = {};
-
         res.data.likes.forEach((like: any) => {
           likeMap[like.thread_id] = true;
         });
@@ -38,57 +39,65 @@ export const LikeProvider = ({ children }: { children: React.ReactNode }) => {
     fetchUserLikes();
   }, [user]);
 
-  // ✅ Socket listener (hanya update kalau user itu sendiri)
   useEffect(() => {
+    if (!user) return;
+
     const handler = (data: any) => {
       if (!data?.thread_id || !data?.user_id) return;
-      if (!user) return;
 
-      // Abaikan jika socket bukan untuk user ini
       if (data.user_id !== user.id) return;
 
       setLikes((prev) => ({
         ...prev,
-        [data.thread_id]: true,
+        [data.thread_id]: data.liked,
       }));
     };
 
-    socket.on("new-like", handler);
+    socket.on("like:update", handler);
 
     return () => {
-      socket.off("new-like", handler);
+      socket.off("like:update", handler);
     };
   }, [user]);
 
-  // ✅ Like
   const likeThread = async (threadId: number) => {
     if (!user) return;
 
+    setLikes((prev) => ({
+      ...prev,
+      [threadId]: true,
+    }));
+
     try {
       await api.post(`/api/v1/like?thread_id=${threadId}`);
-
-      setLikes((prev) => ({
-        ...prev,
-        [threadId]: true,
-      }));
     } catch (err) {
       console.error("Failed to like thread:", err);
-    }
-  };
-
-  // ✅ Unlike
-  const unlikeThread = async (threadId: number) => {
-    if (!user) return;
-
-    try {
-      await api.delete(`/api/v1/like?thread_id=${threadId}`);
 
       setLikes((prev) => ({
         ...prev,
         [threadId]: false,
       }));
+    }
+  };
+
+  const unlikeThread = async (threadId: number) => {
+    if (!user) return;
+
+    // Optimistic UI
+    setLikes((prev) => ({
+      ...prev,
+      [threadId]: false,
+    }));
+
+    try {
+      await api.delete(`/api/v1/like?thread_id=${threadId}`);
     } catch (err) {
       console.error("Failed to unlike thread:", err);
+
+      setLikes((prev) => ({
+        ...prev,
+        [threadId]: true,
+      }));
     }
   };
 
