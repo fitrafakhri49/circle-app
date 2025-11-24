@@ -1,12 +1,13 @@
 import  express  from "express";
 import authroute from "./routes/auth";
 import thread from "./routes/thread";
-import cors from "../src/middlewares/cors";
 import path from "path";
 import { Server } from "socket.io";
 import http from "http";
 import corsMiddleware from "../src/middlewares/cors";
 import reply from "./routes/replies";
+import like from "./routes/like";
+
 
 
 const app=express()
@@ -27,6 +28,9 @@ export const io = new Server(server,{
 io.on("connection", (socket) => {
     socket.on("new-thread", (data) => {
       io.emit("new-thread", data);
+      io.emit("new-reply",data);
+      io.emit("new-like",data);
+
     });
   
     socket.on("disconnect", (reason) => {
@@ -37,7 +41,7 @@ io.on("connection", (socket) => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use("/api/v1",authroute,thread,reply)
+app.use("/api/v1",authroute,thread,reply,like)
 app.use("/uploads",express.static(path.join(__dirname,"uploads")))
 server.listen(process.env.PORT,()=>{
     console.log(`server is running at ${process.env.PORT}`)

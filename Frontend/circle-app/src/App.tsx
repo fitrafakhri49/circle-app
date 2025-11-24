@@ -8,33 +8,36 @@ import { ThreadProvider } from "./context/ThreadProvider";
 import { Replies } from "./pages/Replies";
 import { ThreadAndPost } from "./pages/ThreadAndPost";
 import { ReplyProvider } from "./context/RepliesProvider";
+import { LikeProvider } from "./context/LikeProvider";
 
 function App() {
   return (
-    <ReplyProvider>
-      <ThreadProvider>
-        <AuthProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/" element={<Navigate to="/thread" replace />} />
-              <Route
-                path="/thread/*"
-                element={
-                  <PrivateRoute>
-                    <Home />
-                  </PrivateRoute>
-                }
-              >
-                <Route index element={<ThreadAndPost />} />
-                <Route path=":id" element={<Replies />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        </AuthProvider>
-      </ThreadProvider>
-    </ReplyProvider>
+    <LikeProvider>
+      <ReplyProvider>
+        <ThreadProvider>
+          <AuthProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/" element={<Navigate to="/thread" replace />} />
+                <Route
+                  path="/thread/*"
+                  element={
+                    <PrivateRoute>
+                      <Home />
+                    </PrivateRoute>
+                  }
+                >
+                  <Route index element={<ThreadAndPost />} />
+                  <Route path=":id" element={<Replies />} />
+                </Route>
+              </Routes>
+            </BrowserRouter>
+          </AuthProvider>
+        </ThreadProvider>
+      </ReplyProvider>
+    </LikeProvider>
   );
 }
 

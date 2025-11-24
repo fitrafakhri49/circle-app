@@ -5,11 +5,11 @@ import type { ThreadType } from "../types/ThreadType";
 import { Heart, MessageCircle, ArrowBigLeft } from "lucide-react";
 
 import { Link } from "react-router-dom";
+import { useLike } from "../hooks/useLike";
 
 export function ThreadReply() {
   const { id } = useParams<{ id: string }>();
   const [thread, setThread] = useState<ThreadType | null>(null);
-  const [like, setLike] = useState<{ [key: number]: boolean }>({});
   useEffect(() => {
     const fetchThread = async () => {
       try {
@@ -57,10 +57,10 @@ export function ThreadReply() {
         <p className="mb-2">{thread.content}</p>
         <div className="flex items-center gap-4 mt-2">
           <div className="flex items-center gap-1">
-            <Heart
-              className={like[thread.id] ? "text-red-500" : "text-gray-400"}
-            />
-            <span>{thread.likes ?? 0}</span>
+            {/* <Heart
+              className={likes[thread.id] ? "text-red-500" : "text-gray-400"}
+            /> */}
+            {/* <span>{thread.likes ?? 0}</span> */}
           </div>
           <div className="flex items-center gap-1">
             <MessageCircle />

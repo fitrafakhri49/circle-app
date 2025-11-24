@@ -1,4 +1,5 @@
 import type {  UserType } from "../types/UserType";
+import type { LikeType } from "./LikeType";
 import type { ReplyType } from "./ReplyType";
 
 export interface ThreadType {
@@ -7,8 +8,8 @@ export interface ThreadType {
     user: UserType; 
     id:number;
     number_of_replies: number;
-    likes:string
+    likes:LikeType
     replies:ReplyType
-
+    number_of_likes:number
   }
 

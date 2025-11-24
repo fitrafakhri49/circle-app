@@ -39,8 +39,8 @@ export async function getReplies(req:Request,res:Response) {
   
 
 
-    } catch (error) {
-        
+    } catch (err: any) {
+      return res.status(400).json({ message: err.message });
     }
 }
 
@@ -85,7 +85,7 @@ export async function PostReplies(req:Request,res:Response) {
         }
       });
     
-    io.emit("new-thread", reply);
+    io.emit("new-reply", reply);
 
     return res.status(201).json({
       code: 200,

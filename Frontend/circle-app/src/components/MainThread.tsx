@@ -1,28 +1,89 @@
 import { Heart } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useContext, useState, useRef } from "react";
 import { api } from "@/services/api";
 import { socket } from "../lib/socket";
 import type { ThreadType } from "../types/ThreadType";
-import type {} from "../types/UserType";
 import { MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { LikeContext } from "@/context/LikeContext";
 
 export function MainThread() {
   const navigate = useNavigate();
-  const [like, setLike] = useState<{ [key: number]: boolean }>({});
+  const { likes, setLikes } = useContext(LikeContext)!;
   const [threads, setThreads] = useState<ThreadType[]>([]);
+  const loadingIds = useRef<Set<number>>(new Set());
 
   const handleClickThread = (id: number) => {
     navigate(`/thread/${id}`);
   };
 
-  const handleClick = (id: number) => {
-    setLike((prev) => ({
-      ...prev,
-      [id]: !prev[id],
-    }));
+  const isLiked = (threadId: number) => {
+    return likes[threadId] === true;
   };
 
+  const handleLikeClick = async (threadId: number) => {
+    // ✅ Cegah spam click
+    if (loadingIds.current.has(threadId)) return;
+
+    loadingIds.current.add(threadId);
+
+    try {
+      const alreadyLiked = likes[threadId] === true;
+
+      // ===== OPTIMISTIC UI =====
+      setLikes((prev) => ({
+        ...prev,
+        [threadId]: !alreadyLiked,
+      }));
+
+      setThreads((prev) =>
+        prev.map((thread) =>
+          thread.id === threadId
+            ? {
+                ...thread,
+                number_of_likes: alreadyLiked
+                  ? Math.max((thread.number_of_likes ?? 0) - 1, 0)
+                  : (thread.number_of_likes ?? 0) + 1,
+              }
+            : thread
+        )
+      );
+
+      // ===== API CALL =====
+      if (alreadyLiked) {
+        await api.delete(`/api/v1/like?thread_id=${threadId}`);
+      } else {
+        await api.post(`/api/v1/like?thread_id=${threadId}`);
+      }
+    } catch (err) {
+      console.error("Like toggle error:", err);
+
+      // ===== ROLLBACK IF ERROR =====
+      const wasLiked = likes[threadId] === true;
+
+      setLikes((prev) => ({
+        ...prev,
+        [threadId]: wasLiked,
+      }));
+
+      setThreads((prev) =>
+        prev.map((thread) =>
+          thread.id === threadId
+            ? {
+                ...thread,
+                number_of_likes: wasLiked
+                  ? (thread.number_of_likes ?? 0) + 1
+                  : Math.max((thread.number_of_likes ?? 0) - 1, 0),
+              }
+            : thread
+        )
+      );
+    } finally {
+      loadingIds.current.delete(threadId);
+    }
+  };
+
+  // ✅ Fetch Threads
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,6 +96,26 @@ export function MainThread() {
     fetchData();
   }, []);
 
+  // ✅ Fetch Likes milik user
+  useEffect(() => {
+    const getLikes = async () => {
+      try {
+        const res = await api.get("api/v1/like");
+        const likeMap: Record<number, boolean> = {};
+
+        res.data.likes.forEach((like: any) => {
+          likeMap[like.thread_id] = true;
+        });
+
+        setLikes(likeMap);
+      } catch (err) {
+        console.error("Gagal fetch likes:", err);
+      }
+    };
+    getLikes();
+  }, [setLikes]);
+
+  // ✅ Realtime thread update
   useEffect(() => {
     const handler = (data: ThreadType) => {
       setThreads((prev) => {
@@ -43,6 +124,7 @@ export function MainThread() {
         return [data, ...prev];
       });
     };
+
     socket.on("new-thread", handler);
     return () => {
       socket.off("new-thread", handler);
@@ -50,9 +132,10 @@ export function MainThread() {
   }, []);
 
   if (!threads) return null;
+
   return (
     <div>
-      {(threads || []).map((thread) => (
+      {threads.map((thread) => (
         <div
           key={thread.id}
           className="mb-4 border rounded-md p-4 mt-5 shadow-md bg-gray-800 text-white"
@@ -82,24 +165,26 @@ export function MainThread() {
               className="w-full rounded-md mb-2 object-cover"
             />
           )}
+
           <p className="mb-2">{thread.content}</p>
 
           <div className="flex items-center gap-4 mt-2">
             <div
-              onClick={() => handleClick(thread.id)}
+              onClick={() => handleLikeClick(thread.id)}
               className="cursor-pointer flex items-center gap-1"
             >
               <Heart
-                className={like[thread.id] ? "text-red-500" : "text-gray-400"}
+                className={
+                  isLiked(thread.id) ? "text-red-500" : "text-gray-400"
+                }
               />
-              <span>{thread.likes ?? 0}</span>
+              <span>{thread.number_of_likes ?? 0}</span>
             </div>
+
             <div className="flex items-center gap-1">
               <MessageCircle
                 className="cursor-pointer"
-                onClick={() => {
-                  handleClickThread(thread.id);
-                }}
+                onClick={() => handleClickThread(thread.id)}
               />
               <span>{thread.number_of_replies}</span>
             </div>

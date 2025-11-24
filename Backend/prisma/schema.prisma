@@ -53,7 +53,6 @@ model replies {
   thread threads @relation(fields: [thread_id], references: [id])
 
   user users @relation(fields: [user_id], references: [id])
-  // number_of_replies_thread threads[] @relation("number_of_replies_thread")
 }
 
 model threads {
@@ -65,12 +64,12 @@ model threads {
   created_by        Int
   updated_at        DateTime @default(now())
   updated_by        Int
+  number_of_likes   Int      @default(0)
 
   user                   users     @relation("created_by_user", fields: [created_by], references: [id])
   updated_by_user_thread users     @relation("updated_by_user", fields: [updated_by], references: [id])
   likes                  likes[]
   replies                replies[]
-  // number_of_replies_thread replies   @relation("number_of_replies_thread", fields: [number_of_replies], references: [id])
 }
 
 model likes {
@@ -82,8 +81,8 @@ model likes {
   updated_at DateTime @default(now())
   updated_by Int?
 
-  users   users   @relation(fields: [user_id], references: [id])
-  threads threads @relation(fields: [thread_id], references: [id])
+  user   users   @relation(fields: [user_id], references: [id])
+  thread threads @relation(fields: [thread_id], references: [id])
 
   @@unique([thread_id, user_id])
 }

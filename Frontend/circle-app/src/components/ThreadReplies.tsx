@@ -30,9 +30,9 @@ export function ThreadReplies() {
         return [data, ...prev];
       });
     };
-    socket.on("new-thread", handler);
+    socket.on("new-reply", handler);
     return () => {
-      socket.off("new-thread", handler);
+      socket.off("new-reply", handler);
     };
   }, []);
 

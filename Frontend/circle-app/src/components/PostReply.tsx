@@ -22,7 +22,6 @@ export function PostReply() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Cek threadId
     if (!threadId) {
       setSuccessMessage("Thread ID tidak ditemukan");
       return;
@@ -30,7 +29,6 @@ export function PostReply() {
 
     if (!form.content.trim() && !file) return;
 
-    setLoading(3);
     try {
       const formData = new FormData();
       formData.append("content", form.content);
