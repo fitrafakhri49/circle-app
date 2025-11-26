@@ -7,8 +7,49 @@ import {  io} from "../app";
 
 export async function getThreads(req: Request, res: Response) {
   try {
+    const user = (req as any).user;
+
+    if (!user?.id) {
+      return res.status(401).json({
+        code: 401,
+        status: "error",
+        message: "Unauthorized",
+      });
+    }
+
+ 
+    const following = await prisma.follow.findMany({
+      where: {
+        followers_id: user.id,
+      },
+      select: {
+        following_id: true,
+      },
+    });
+
+    const followingIds = following.map((f) => f.following_id);
+    const authorIds = [...followingIds, user.id];
+
+
+    if (followingIds.length === 0) {
+      return res.status(200).json({
+        code: 200,
+        status: "success",
+        message: "No following threads",
+        result: [],
+      });
+    }
+
+    
     const threads = await prisma.threads.findMany({
-      orderBy: { created_at: "desc" },
+      where: {
+        created_by: {
+          in: authorIds,
+        },
+      },
+      orderBy: {
+        created_at: "desc",
+      },
       include: {
         user: {
           select: {
@@ -29,36 +70,40 @@ export async function getThreads(req: Request, res: Response) {
                 id: true,
                 username: true,
                 full_name: true,
-                photo_profile:true
-              }
-            }
-          }
+                photo_profile: true,
+              },
+            },
+          },
         },
         _count: {
           select: {
-            replies: true
-          }
-        }
+            replies: true,
+          },
+        },
       },
     });
 
     const result = threads.map((thread) => ({
       ...thread,
-      number_of_replies: thread._count.replies
+      number_of_replies: thread._count.replies,
     }));
-
 
     res.status(200).json({
       code: 200,
       status: "success",
       message: "Get Data Thread Successfully",
-      result
+      result,
     });
   } catch (err: any) {
     console.error(err);
-    res.status(400).json({ code: 400, status: "error", message: err.message });
+    res.status(400).json({
+      code: 400,
+      status: "error",
+      message: err.message,
+    });
   }
 }
+
 
 export async function getThread(req: Request, res: Response) {
   try {

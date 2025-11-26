@@ -11,7 +11,7 @@ export async function getLikes(req: Request, res: Response) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const likes = await prisma.likes.findMany({
+    const likes :any = await prisma.likes.findMany({
       where: {
         user_id: user.id,
       },
