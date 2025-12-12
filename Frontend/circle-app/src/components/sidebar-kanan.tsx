@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from "react";
-import { AuthContext } from "@/context/AuthContext";
+import { useEffect, useState } from "react";
 import type { UserType } from "@/types/UserType";
 import { api } from "@/services/api";
 import { useNavigate } from "react-router-dom";
@@ -22,9 +21,9 @@ export function RightSidebar() {
   }, []);
 
   return (
-    <div className=" text-white p-4 ">
+    <div className=" text-white p-4 flex flex-col">
       <div className="bg-[#121212] rounded-2xl p-4 shadow-lg border border-gray-800">
-        <h3 className="text-sm font-semibold mb-3">My Profile COntoh</h3>
+        <h3 className="text-sm font-semibold mb-3">My Profile </h3>
 
         <div className="relative">
           <div className="h-20 w-full rounded-xl bg-gradient-to-r from-green-200 via-yellow-300 to-yellow-500" />
@@ -58,6 +57,22 @@ export function RightSidebar() {
           </div>
 
           <p className="text-sm text-gray-300 mt-2">{users?.bio ?? "Bio"}</p>
+
+          {/* ✅ Followers & Following */}
+          <div className="flex gap-4 mt-3 text-sm text-gray-300">
+            <div className="flex items-center gap-1">
+              <span className="font-semibold text-white">
+                {users?.followers_count}
+              </span>
+              <span className="text-gray-400">Followers</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <span className="font-semibold text-white">
+                {users?.following_count}
+              </span>
+              <span className="text-gray-400">Following</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

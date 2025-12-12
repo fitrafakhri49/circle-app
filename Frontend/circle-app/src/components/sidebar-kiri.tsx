@@ -1,12 +1,4 @@
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Search, House, UserPlus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -30,10 +22,16 @@ export function SidebarKiri() {
           <Link to="/thread" className="flex items-center gap-2">
             <House /> <span>Home</span>
           </Link>
-          <li className="cursor-pointer flex items-center gap-2">
-            <Search className="w-5 h-5" />
-            <span>Search</span>
+          <li>
+            <Link
+              to="/thread/search"
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <Search className="w-5 h-5" />
+              <span>Search</span>
+            </Link>
           </li>
+
           <Link
             to="/thread/follow/follower"
             className="flex items-center gap-2"

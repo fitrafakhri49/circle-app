@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 // import { UserCard } from "../components/userCard";
 import { api } from "../services/api";
@@ -69,7 +69,7 @@ export const FollowersPage = () => {
         <div className="flex gap-2 bg-gray-100 p-1 rounded-full w-fit">
           <button
             onClick={() => navigate("/thread/follow/follower")}
-            className={`px-5 py-2 rounded-full text-sm font-semibold transition
+            className={`px-5 py-2 rounded-full text-sm font-semibold transition cursor-pointer
               ${
                 type === "follower"
                   ? "bg-blue-500 text-white shadow"
@@ -82,7 +82,7 @@ export const FollowersPage = () => {
 
           <button
             onClick={() => navigate("/thread/follow/following")}
-            className={`px-5 py-2 rounded-full text-sm font-semibold transition
+            className={`px-5 py-2 rounded-full text-sm font-semibold transition cursor-pointer
               ${
                 type === "following"
                   ? "bg-blue-500 text-white shadow"
@@ -95,7 +95,6 @@ export const FollowersPage = () => {
         </div>
       </div>
 
-      {/* TABLE */}
       {loading ? (
         <p>Loading...</p>
       ) : users.length === 0 ? (
@@ -145,7 +144,7 @@ export const FollowersPage = () => {
                   <td className="px-6 py-4 text-center">
                     <button
                       onClick={() => handleFollowToggle(user)}
-                      className={`px-5 py-2 rounded-full text-sm font-medium text-white transition
+                      className={`px-5 py-2 rounded-full text-sm font-medium text-white transition cursor-pointer
                         ${
                           user.is_following
                             ? "bg-red-500 hover:bg-red-600"

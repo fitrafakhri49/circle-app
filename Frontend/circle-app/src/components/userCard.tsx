@@ -1,5 +1,3 @@
-import React from "react";
-
 import type { UserType } from "../types/UserType";
 export const UserCard = ({ user }: { user: UserType }) => {
   return (

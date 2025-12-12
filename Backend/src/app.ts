@@ -9,8 +9,9 @@ import reply from "./routes/replies";
 import like from "./routes/like";
 import currentUser from "./routes/user";
 import follows from "./routes/follows";
+import { connectRedis } from "./config/redis";
 
-
+connectRedis();
 
 const app=express()
 const server=http.createServer(app)
@@ -36,7 +37,7 @@ io.on("connection", (socket) => {
     });
   
     socket.on("disconnect", (reason) => {
-      console.log("Client Terputus", socket.id,reason);
+   
     });
   });
 

@@ -1,17 +1,8 @@
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { SidebarKiri } from "../components/sidebar-kiri";
 import { RightSidebar } from "../components/sidebar-kanan";
 
 import { Outlet } from "react-router-dom";
+import { SuggestionCard } from "@/components/SuggestionCard";
 
 export function Home() {
   return (
@@ -26,6 +17,7 @@ export function Home() {
       </div>
       <div className="flex-1 ">
         <RightSidebar />
+        <SuggestionCard />
       </div>
     </div>
   );

@@ -91,7 +91,10 @@ export function Login() {
               </Field>
 
               <Field>
-                <Button type="submit" className="bg-green-700 w-full">
+                <Button
+                  type="submit"
+                  className="bg-green-700 w-full cursor-pointer"
+                >
                   Login
                 </Button>
                 <FieldDescription className="text-start">

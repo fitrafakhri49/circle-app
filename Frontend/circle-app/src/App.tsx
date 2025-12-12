@@ -11,58 +11,55 @@ import { ReplyProvider } from "./context/RepliesProvider";
 import { LikeProvider } from "./context/LikeProvider";
 import { UpdateProfile } from "./pages/editProfile";
 import { FollowersPage } from "./pages/follows";
+import { FollowProvider } from "./context/FollowProvider";
+import { SearchPage } from "./pages/SearchPage";
 
 function App() {
   return (
-    <LikeProvider>
-      <ReplyProvider>
-        <ThreadProvider>
-          <AuthProvider>
-            <BrowserRouter>
-              <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/" element={<Navigate to="/thread" replace />} />
+    <AuthProvider>
+      <FollowProvider>
+        <LikeProvider>
+          <ReplyProvider>
+            <ThreadProvider>
+              <BrowserRouter>
+                <Routes>
+                  {/* Halaman publik */}
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
 
-                {/* Thread */}
-                <Route
-                  path="/thread/*"
-                  element={
-                    <PrivateRoute>
-                      <Home />
-                    </PrivateRoute>
-                  }
-                >
-                  <Route index element={<ThreadAndPost />} />
-                  <Route path=":id" element={<Replies />} />
-                  <Route path="follow/:type" element={<FollowersPage />} />
-                </Route>
+                  {/* Redirect root */}
+                  <Route path="/" element={<Navigate to="/thread" replace />} />
 
-                {/* Edit profile */}
-                <Route
-                  path="/editProfile"
-                  element={
-                    <PrivateRoute>
-                      <UpdateProfile />
-                    </PrivateRoute>
-                  }
-                />
+                  {/* Halaman privat */}
+                  <Route
+                    path="/thread/*"
+                    element={
+                      <PrivateRoute>
+                        <Home />
+                      </PrivateRoute>
+                    }
+                  >
+                    <Route index element={<ThreadAndPost />} />
+                    <Route path=":id" element={<Replies />} />
+                    <Route path="follow/:type" element={<FollowersPage />} />
+                    <Route path="search" element={<SearchPage />} />
+                  </Route>
 
-                {/* Followers / Following dynamic route */}
-                {/* <Route
-                  path="/follows/:type"
-                  element={
-                    <PrivateRoute>
-                      <FollowersPage />
-                    </PrivateRoute>
-                  }
-                /> */}
-              </Routes>
-            </BrowserRouter>
-          </AuthProvider>
-        </ThreadProvider>
-      </ReplyProvider>
-    </LikeProvider>
+                  <Route
+                    path="/editProfile"
+                    element={
+                      <PrivateRoute>
+                        <UpdateProfile />
+                      </PrivateRoute>
+                    }
+                  />
+                </Routes>
+              </BrowserRouter>
+            </ThreadProvider>
+          </ReplyProvider>
+        </LikeProvider>
+      </FollowProvider>
+    </AuthProvider>
   );
 }
 

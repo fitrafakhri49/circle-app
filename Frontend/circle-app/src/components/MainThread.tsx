@@ -6,12 +6,57 @@ import type { ThreadType } from "../types/ThreadType";
 import { MessageCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { LikeContext } from "@/context/LikeContext";
+import type { UserType } from "../types/UserType";
 
 export function MainThread() {
   const navigate = useNavigate();
   const { likes, setLikes } = useContext(LikeContext)!;
+  const [currentUser, setCurrentUser] = useState<UserType | null>(null);
+
   const [threads, setThreads] = useState<ThreadType[]>([]);
   const loadingIds = useRef<Set<number>>(new Set());
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const res = await api.get("/api/v1/user");
+        setCurrentUser(res.data.user);
+      } catch (err) {
+        console.error("Error fetching current user:", err);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
+  useEffect(() => {
+    const handler = (data: {
+      thread_id: number;
+      user_id: number;
+      liked: boolean;
+      total_likes?: number;
+    }) => {
+      setThreads((prev) =>
+        prev.map((thread) =>
+          thread.id === data.thread_id
+            ? {
+                ...thread,
+                number_of_likes:
+                  typeof data.total_likes === "number"
+                    ? data.total_likes
+                    : thread.number_of_likes,
+              }
+            : thread
+        )
+      );
+    };
+
+    socket.on("like:update", handler);
+
+    return () => {
+      socket.off("like:update", handler);
+    };
+  }, []);
 
   const handleClickThread = (id: number) => {
     navigate(`/thread/${id}`);

@@ -6,7 +6,8 @@
   "type": "commonjs",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev src/app.ts"
+    "dev": "ts-node-dev src/app.ts",
+    "build":"tsc"
   },
   "prisma": {
     "seed": "ts-node src/prisma/seed.ts"
@@ -26,6 +27,7 @@
     "jsonwebtoken": "^9.0.2",
     "multer": "^2.0.2",
     "prisma": "^6.19.0",
+    "redis": "^5.10.0",
     "socket.io": "^4.8.1"
   },
   "devDependencies": {
